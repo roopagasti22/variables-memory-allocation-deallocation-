@@ -1,0 +1,4 @@
+what are the uses of variables in node js and python ?
+how memory assosicated with variables.what is the time period or validity or expaiery or memory delestion?
+how does the memory allocation works in node js for variables?
+what does the memory allocation works in python for variables
