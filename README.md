@@ -37,7 +37,7 @@ print(first["score"])  # 20
 There is no single expiry time for all variables. Two related things matter:
 
 - **Name visibility (scope):** where the name can be used. A local name is generally usable only inside its function or block, while a module-level name can remain usable while that module or program is active.
-- **Object lifetime:** how long the value remains in memory. An object can remain alive after one name goes out of scope if another name, a closure, a collection, or another part of the program still refers to it.
+- **Object lifetime:** how long the value remains available to the program. An object can remain alive after one name goes out of scope if it is still reachable through another name, a closure, a collection, or another live object. A group of objects that refer only to one another can still be unreachable as a whole.
 
 When an object is no longer reachable by the program, it becomes eligible for memory reclamation. That does **not** mean it is deleted immediately. Garbage collection runs automatically, and neither language promises a precise cleanup time. Memory released by the runtime may also be kept for reuse instead of immediately being returned to the operating system.
 
@@ -68,22 +68,22 @@ The `count` binding remains usable because the returned function refers to it. O
 
 In Python, names are bound to objects. Assignment usually binds a name to an existing object or to a newly created one; it does not copy an object unless an operation explicitly makes a copy. The language specifies behavior, while details such as allocation and cleanup can differ by Python implementation. The following describes the common CPython implementation.
 
-- A local name is typically available while its function is executing. Module-level names usually remain available as long as the module remains loaded.
-- An object remains alive while it is referenced. Other references can keep it alive after a local name is gone.
+- Python resolves names through local, enclosing, global, and built-in scopes. A function's local names are typically available while that call is active; a closure can retain an enclosing name after the enclosing function returns. A class body has its own namespace while it executes, but that namespace does not act as an enclosing scope for methods in the same way a function scope does. Module-level names usually remain available while the module remains loaded.
+- An object can remain alive after a local name is gone if it is still reachable from the running program. In CPython, references inside an unreachable cycle do not by themselves keep the cycle alive forever; the cyclic garbage collector can detect many such cycles.
 - CPython primarily uses reference counting: when an object's reference count reaches zero, it can usually be deallocated promptly.
 - Reference counting alone cannot reclaim unreachable reference cycles. CPython also has a cyclic garbage collector that detects and collects many such cycles. Its timing is not a guaranteed expiry time.
 - Python may keep freed memory in internal allocators for reuse rather than returning it to the operating system immediately.
 
 ```python
 def make_counter():
-		count = 0
+    count = 0
 
-		def next_value():
-				nonlocal count
-				count += 1
-				return count
+    def next_value():
+        nonlocal count
+        count += 1
+        return count
 
-		return next_value  # The closure retains the count binding.
+    return next_value  # The closure retains the count binding.
 
 next_value = make_counter()
 print(next_value())  # 1
@@ -96,7 +96,7 @@ Here, `count` remains available because the returned inner function refers to it
 | Topic | Node.js (V8 JavaScript) | Python (common CPython implementation) |
 |---|---|---|
 | What a variable is | A name binding to a value | A name binding to an object |
-| Scope | Lexical scope; `let`/`const` are block-scoped and `var` is function-scoped | Function, class, and module scopes; blocks such as `if` do not create a local scope |
+| Scope | Lexical scope; `let`/`const` are block-scoped and `var` is function-scoped | Local, enclosing, global, and built-in name lookup; blocks such as `if` do not create a local scope |
 | Main automatic cleanup | Tracing garbage collection of unreachable objects | Reference counting plus cyclic garbage collection |
 | Exact cleanup time guaranteed? | No | No; reference counting often frees immediately in CPython, but this is not a general Python guarantee |
 | Can data outlive a function call? | Yes, for example when retained by a closure or another reference | Yes, for example when retained by a closure or another reference |
