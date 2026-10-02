@@ -107,11 +107,73 @@
 # test()
 # print(X)
  
-def add(a, b):
-    return a+b
-def display():
-  result = add(10,20)
-print(result)
-display ()
+# def add(a, b):
+#     return a+b
+# def display():
+#     result = add(10,20)
+#     print(result)
 
-    
+# display()
+
+# def multiply (a,b):
+#     return a*b
+# result = multiply(5,4)
+# print(result)
+
+# def square(x):
+#      return x*x
+# def process(function, value):
+#      return function(value)
+# print(process(square,5))
+
+# square = lambda x: x*x
+# print(square(5))
+
+# numbers =(1,2,3,4)
+# result = list(map(lambda x: x*2,numbers))
+# print(result)
+
+# def countdown (n):
+#      if n == 0:
+#         return 
+#      print(n)
+#      countdown (n-1)
+# countdown (5)
+
+# def add(a,b):
+#     """return the sum of two numbers """
+#     return a+b
+
+
+# print(add.__doc__)  
+
+# def add(a: int, b: int) -> int:
+#     return a+b
+# print(add.__annotations__)
+
+# def calculate_bill(units):
+#     if units <=100:
+#        amount = units *2
+#     elif units<=200:
+#        amount = 100*2+(units-100)
+#     else:
+#         amount = 100*2+100*4+(units-200*6)
+#     return amount+100
+# units =int(input("enter units:"))
+# bill = calculate_bill(units)
+# print("bill", bill)
+
+# def student_system():
+#  #200 lines
+#  #input
+#  #validation
+#  #calculation
+#  #database
+#  #printing 
+
+# better 
+# def get_student():
+# def validate_student():
+# def calculate_student():
+# def save_student():
+# def disdplay_student():
